@@ -6,6 +6,8 @@ use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 /**
  * @property-read Point $location
@@ -45,4 +47,34 @@ class Marker extends Model
         'updated_at' => 'datetime:Y-m-d H:i:s',
         'deleted_at' => 'datetime:Y-m-d H:i:s',
     ];
+
+    /**
+     * @return string
+     */
+    public function getIconUrlAttribute() : string
+    {
+        return asset('assets/img/' . Str::of($this->type)->lower() . '.svg');
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeAliasAttribute() : string
+    {
+        return match ($this->type) {
+            self::TYPE_JC => 'JC',
+            self::TYPE_ODC => 'ODC',
+            self::TYPE_ODP => 'ODP',
+            self::TYPE_POLE => 'TIANG',
+            default => 'UNKNOWN',
+        };
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function ports() : HasMany
+    {
+        return $this->hasMany(Port::class);
+    }
 }

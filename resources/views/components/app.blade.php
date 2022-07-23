@@ -41,7 +41,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="menu">
+                                <a href="{{ route('marker.index') }}" class="menu {{ request()->url() === route('marker.index') ? 'active' : '' }}">
                                     DAFTAR MARKER
                                 </a>
                             </li>

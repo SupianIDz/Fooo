@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Markers\CreateMarkerRequest;
 use App\Http\Resources\Markers\MarkerCollection;
 use App\Http\Resources\Markers\MarkerResource;
 use App\Models\Marker;
+use App\Services\MarkerService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class MarkerController extends Controller
@@ -33,5 +36,25 @@ class MarkerController extends Controller
     public function show(Marker $marker)
     {
         return new MarkerResource($marker);
+    }
+
+    /**
+     * @param  CreateMarkerRequest $request
+     * @param  MarkerService       $service
+     * @return JsonResponse
+     */
+    public function store(CreateMarkerRequest $request, MarkerService $service)
+    {
+        if ($service->createFromRequest($request)) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Marker created successfully',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Something went wrong',
+        ]);
     }
 }

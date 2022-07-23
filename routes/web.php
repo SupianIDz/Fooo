@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MarkerController;
 use App\Http\Controllers\NetworkMapController;
 use App\Http\Controllers\TubeController;
 use Illuminate\Support\Facades\Route;
@@ -20,5 +21,12 @@ Route::group([], function () {
     Route::get('/', [NetworkMapController::class, 'index'])->name('map.network');
 
     # NETWORK
-    Route::resource('tubes', TubeController::class);
+    Route::resource('tubes', TubeController::class)->only([
+        'index', 'create', 'edit',
+    ]);
+
+    # MARKER
+    Route::resource('marker', MarkerController::class)->only([
+        'index', 'create', 'edit',
+    ]);
 });
