@@ -2,7 +2,7 @@ import L from 'leaflet';
 import outer from './utils/map.outer';
 import 'leaflet.fullscreen';
 
-export default (element) => {
+export default (element, options = {}) => {
     let defaultTile = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
     let tastersTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png');
 
@@ -16,7 +16,8 @@ export default (element) => {
         fullscreenControl: true,
         fullscreenControlOptions: {
             position: 'topleft'
-        }
+        },
+        ...options
     });
 
     L.control.layers({

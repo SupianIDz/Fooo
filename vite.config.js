@@ -11,6 +11,9 @@ export default defineConfig({
 
                 //
                 'resources/js/dashboard/index.js',
+
+                //
+                'resources/js/network/create.js',
             ],
             refresh: true,
         }),

@@ -26,11 +26,16 @@ class TubeResource extends JsonResource
             'weight'      => $this->weight,
             'opacity'     => $this->opacity,
             'lines'       => $this->when($request->has('lines'), function () {
-                $liens = $this->lines->map(function (TubeLine $line) {
+                $lines = $this->lines->map(function (TubeLine $line) {
                     return new Point($line->lng, $line->lat);
                 });
 
-                return new LineString($liens->toArray());
+
+                if ($lines->count() === 0) {
+                    return [];
+                }
+
+                return new LineString($lines->toArray());
             }),
         ];
     }

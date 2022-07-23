@@ -10,7 +10,7 @@
     <body>
         <div class="flex flex-col h-screen bg-slate-200">
 
-            <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
+            <nav class="bg-white sticky top-0 border-gray-200 px-2 sm:px-4 py-2.5 dark:bg-gray-900">
                 <div class="container flex flex-wrap justify-between items-center mx-auto">
                     <a href="/" class="flex items-center">
                         <img src="https://flowbite.com/docs/images/logo.svg" class="mr-3 h-6 sm:h-9" alt="Flowbite Logo">
@@ -50,10 +50,8 @@
                 </div>
             </nav>
 
-            <div class="p-5 h-full">
-                <div class="bg-white rounded-lg ring-1 p-5 h-full">
-                    {{ $slot }}
-                </div>
+            <div class="p-5 h-full overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-blue-600 scrollbar-track-blue-300">
+                {{ $slot }}
             </div>
 
             <footer class="p-4 bg-white shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800">

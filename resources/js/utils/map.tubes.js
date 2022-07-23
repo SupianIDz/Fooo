@@ -40,7 +40,7 @@ export const drawCableTubes = async (map) => {
 
             let offset = 0;
 
-            let weight = map.getZoom();
+            let weight = map.getZoom() - 5;
 
             if (index < median) {
                 offset = weight * (idx++)
