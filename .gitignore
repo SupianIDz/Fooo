@@ -3,13 +3,17 @@
 
 # PROJECT
 .env
+.phpstorm.*.php
 
 /public/hot
 /public/storage
 /public/build
 
-/node_modules
 /storage/*.key
+
+/node_modules
+/resources/js/ziggy.js
+
 /vendor
 
 # LOG

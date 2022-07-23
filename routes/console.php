@@ -16,4 +16,18 @@ use Illuminate\Support\Facades\Artisan;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+})
+    ->purpose('Display an inspiring quote');
+
+Artisan::command('idea', function () {
+    $this->call('ide-helper:meta');
+    $this->call('ide-helper:eloquent');
+    $this->call('ide-helper:generate');
+    $this->call('ide-helper:models', [
+        '-M' => true,
+        '-R' => true,
+        '-F' => '.phpstorm.model.php',
+        '-q' => true,
+    ]);
+})
+    ->purpose('Generate IDE helper files');
