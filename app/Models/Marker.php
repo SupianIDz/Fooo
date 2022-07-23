@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property-read Point $location
  * @mixin IdeHelperMarker
  */
 class Marker extends Model

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\MarkerController;
+use App\Http\Controllers\API\TubeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,4 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('markers', MarkerController::class);
+Route::group([], function () {
+    # TUBES
+    Route::resource('tubes', TubeController::class);
+
+    # MARKERS
+    Route::resource('markers', MarkerController::class);
+});

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\TubeCableController;
+use App\Http\Controllers\NetworkMapController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard.index');
+Route::group([], function () {
+    # MAP
+    Route::get('/', [NetworkMapController::class, 'index'])->name('map.network');
+
+    # NETWORK
+    Route::resource('tubes', TubeCableController::class);
 });

@@ -5,5 +5,5 @@
 @endpush
 
 <x-app>
-    <div id="map" class="h-full"></div>
+    <div id="map" class="rounded-md h-full"></div>
 </x-app>

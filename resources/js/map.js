@@ -1,5 +1,5 @@
 import L from 'leaflet';
-import outer from './utils/outer';
+import outer from './utils/map.outer';
 import 'leaflet.fullscreen';
 
 export default (element) => {
