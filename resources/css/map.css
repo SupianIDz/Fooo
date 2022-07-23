@@ -1,0 +1,17 @@
+@import 'leaflet';
+@import 'leaflet.fullscreen/Control.FullScreen.css';
+
+.leaflet-control-layers-base > label {
+    padding: 5px;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.leaflet-control-layers-base > label > span > span {
+    margin-left: 5px;
+    font-size: 90%;
+}
