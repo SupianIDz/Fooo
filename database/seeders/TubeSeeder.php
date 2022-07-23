@@ -9,6 +9,6 @@ class TubeSeeder extends Seeder
 {
     public function run()
     {
-        Tube::factory()->count(3)->create();
+        Tube::factory()->count(2)->create();
     }
 }

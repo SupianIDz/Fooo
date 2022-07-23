@@ -10,6 +10,8 @@
         "leaflet-polylineoffset": "^1.1.1",
         "leaflet.fullscreen": "^2.4.0",
         "screenfull": "^6.0.2",
+        "sweetalert2": "^11.4.24",
+        "tail.select.js": "^0.5.22",
         "ziggy-js": "^1.4.6"
     },
     "devDependencies": {

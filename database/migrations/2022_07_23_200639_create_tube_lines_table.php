@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('uuid');
             $table->foreignId('tube_id')->constrained();
+            $table->string('name')->nullable();
             $table->text('address')->nullable();
             $table->double('lat')->nullable();
             $table->double('lng')->nullable();
-            $table->foreignId('attached_on')->constrained('markers')->nullable();
+            $table->foreignId('attached_on')->nullable()->constrained('markers');
             $table->timestamps();
         });
     }

@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Marker;
+use App\Models\Tube;
 use Illuminate\Contracts\View\View;
 
-class TubeCableController extends Controller
+class TubeController extends Controller
 {
     /**
+     * @param  Tube $tube
      * @return View
      */
-    public function index() : View
+    public function index(Tube $tube) : View
     {
-        return view('network.index');
+        return view('network.index', [
+            'tubes' => $tube->withCount('lines')->orderBy('created_at', 'DESC')->paginate(10)->withQueryString(),
+        ]);
     }
 
     /**

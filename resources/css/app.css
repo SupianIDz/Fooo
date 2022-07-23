@@ -1,3 +1,5 @@
+@import "tail.select.js/css/default/tail.select-light.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -21,5 +23,9 @@
 
     input[type="color"]::-webkit-color-swatch {
         @apply rounded border-gray-100
+    }
+
+    textarea {
+        resize: none;
     }
 }

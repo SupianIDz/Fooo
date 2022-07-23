@@ -1,8 +1,8 @@
 import { getMarkers } from './xhr/markers';
 
-export const drawMarkers = (map) => {
+export const drawMarkers = (map, params = {}) => {
 
-    getMarkers().then((markers) => {
+    getMarkers(params).then((markers) => {
         for (let row of markers) {
 
             const svgIcon = L.icon({

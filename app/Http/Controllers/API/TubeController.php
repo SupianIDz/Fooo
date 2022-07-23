@@ -16,7 +16,7 @@ class TubeController extends Controller
      */
     public function index()
     {
-        return new TubeCollection(Tube::get([
+        return new TubeCollection(Tube::withCount('lines')->get([
             '*',
         ]));
     }

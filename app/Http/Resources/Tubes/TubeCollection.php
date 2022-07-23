@@ -15,7 +15,8 @@ class TubeCollection extends ResourceCollection
     public function toArray($request) : array
     {
         return [
-            'data' => $this->collection,
-        ];
+            'data' => $this->collection->filter(function ($tube) {
+                return $tube->lines_count > 0;
+            })];
     }
 }

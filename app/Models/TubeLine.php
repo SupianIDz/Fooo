@@ -18,7 +18,7 @@ class TubeLine extends Model
      * @var string[]
      */
     protected $fillable = [
-        'uuid', 'tube_id', 'address', 'lat', 'lng', 'attached_on',
+        'uuid', 'tube_id', 'address', 'lat', 'lng', 'attached_on', 'name',
     ];
 
     /**
