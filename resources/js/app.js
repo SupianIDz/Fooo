@@ -1,5 +1,5 @@
 import 'flowbite';
-
+import 'leaflet-polylineoffset';
 import _ from 'lodash';
 import axios from 'axios';
 import route from 'ziggy-js';

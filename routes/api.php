@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group([], function () {
+Route::group(['as' => 'api.'], function () {
     # TUBES
     Route::resource('tubes', TubeController::class);
 

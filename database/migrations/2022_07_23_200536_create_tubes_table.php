@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('uuid');
             $table->string('name');
             $table->string('description')->nullable();
-            $table->float('height')->default(20);
             $table->string('color');
+            $table->float('weight')->default(20);
+            $table->float('opacity')->default(0.7);
             $table->timestamps();
             $table->softDeletes();
         });

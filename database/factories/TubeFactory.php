@@ -19,7 +19,7 @@ class TubeFactory extends Factory
             'name'        => 'TUBE #',
             'description' => $this->faker->text(),
             'color'       => strtoupper($this->faker->hexColor()),
-            'height'      => 20,
+            'weight'      => 40,
         ];
     }
 

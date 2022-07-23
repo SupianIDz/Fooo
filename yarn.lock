@@ -454,6 +454,11 @@ laravel-vite-plugin@^0.5.0:
   dependencies:
     vite-plugin-full-reload "^1.0.1"
 
+leaflet-polylineoffset@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/leaflet-polylineoffset/-/leaflet-polylineoffset-1.1.1.tgz#021b717d4f7d462f742c1ac1ac0e83e8eef74615"
+  integrity sha512-WcEjAROx9IhIVwSMoFy9p2QBCG9YeuGtJl4ZdunIgj4xbCdTrUkBj8JdonUeCyLPnD2/Vrem/raOPHm5LvebSw==
+
 leaflet.fullscreen@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/leaflet.fullscreen/-/leaflet.fullscreen-2.4.0.tgz#8503c69b6f6afe6f54594c9cdd5e4f131cfa97b4"
