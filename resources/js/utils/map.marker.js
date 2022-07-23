@@ -16,6 +16,8 @@ export const drawMarkers = (map, params = {}) => {
                 icon: svgIcon,
             });
 
+            marker.bindPopup(row.name);
+
             marker.addTo(map);
         }
     });

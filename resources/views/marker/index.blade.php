@@ -78,7 +78,7 @@
                                 </div>
                             </td>
                             <td class="py-4 px-6">
-                                6 <small>PORT</small>
+                                {{ $marker->ports_count }} <small>{{ str()->plural('PORT', $marker->ports_count ? $marker->ports_count : 1) }}</small>
                             </td>
                             <td class="py-4 px-6">
                                 {{ $marker->address }}

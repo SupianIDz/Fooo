@@ -16,7 +16,7 @@ class MarkerController extends Controller
     public function index(Marker $marker)
     {
         return view('marker.index', [
-            'markers' => $marker->orderBy('created_at', 'DESC')->paginate(10),
+            'markers' => $marker->withCount('ports')->orderBy('created_at', 'DESC')->paginate(10),
         ]);
     }
 }

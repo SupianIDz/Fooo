@@ -28,7 +28,7 @@ class TubeFactory extends Factory
      */
     public function configure() : self
     {
-        $markers = Marker::get();
+        $markers = Marker::whereType(Marker::TYPE_POLE)->get();
         return $this->afterCreating(function (Tube $tube) use ($markers) {
             $tube->update([
                 'name' => $tube->name . $tube->id,
