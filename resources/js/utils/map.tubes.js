@@ -1,7 +1,11 @@
 import L from 'leaflet';
 import { getTubes } from "./xhr/tubes";
 
-export const drawCableTubes = (map) => {
+export const drawCableTubes = async (map) => {
+
+    const tubes = await getTubes({
+        lines: true
+    });
 
     const groupTube = [];
 
@@ -26,59 +30,56 @@ export const drawCableTubes = (map) => {
 
     // draw tubes
     function drawTubeWrapped() {
-        getTubes({lines: true}).then((tubes) => {
+        let median = tubes.indexOf(
+            tubes[Math.floor((tubes.length - 1) / 2)]
+        );
 
-            let median = tubes.indexOf(
-                tubes[Math.floor((tubes.length - 1) / 2)]
-            );
+        let idx = 1;
+        let idy = 1;
+        tubes.forEach((tube, index) => {
 
-            let idx = 1;
-            let idy = 1;
-            tubes.forEach((tube, index) => {
+            let offset = 0;
 
-                let offset = 0;
+            let weight = map.getZoom();
 
-                let weight = map.getZoom();
+            if (index < median) {
+                offset = weight * (idx++)
+            } else if (index > median) {
+                offset = weight * -(idy++)
+            }
 
-                if (index < median) {
-                    offset = weight * (idx++)
-                } else if (index > median) {
-                    offset = weight * -(idy++)
+            if (index === median) {
+                offset = 0;
+            }
+
+            let geojson = L.geoJSON(tube.lines, {
+                style: {
+                    color: tube.color,
+                    weight: weight,
+                    opacity: 1,
+                    offset: offset,
                 }
+            });
 
-                if (index === median) {
-                    offset = 0;
-                }
+            geojson
+                .on('click', (e) => {
+                    hideTubes();
 
-                let geojson = L.geoJSON(tube.lines, {
-                    style: {
-                        color: tube.color,
-                        weight: weight,
-                        opacity: 1,
-                        offset: offset,
-                    }
-                });
-
-                geojson
-                    .on('click', (e) => {
-                        hideTubes();
-
-                        geojson.setStyle({
-                            weight: tube.weight,
-                            opacity: tube.opacity,
-                        });
-
-                        // move offset to 0
-                        geojson.eachLayer(function (layer) {
-                            layer.setOffset(0);
-                        });
-                    })
-                    .on('contextmenu', (e) => {
-                        resetAllTubes();
+                    geojson.setStyle({
+                        weight: tube.weight,
+                        opacity: tube.opacity,
                     });
 
-                groupTube.push(geojson.addTo(map));
-            });
+                    // move offset to 0
+                    geojson.eachLayer(function (layer) {
+                        layer.setOffset(0);
+                    });
+                })
+                .on('contextmenu', (e) => {
+                    resetAllTubes();
+                });
+
+            groupTube.push(geojson.addTo(map));
         });
     }
 
