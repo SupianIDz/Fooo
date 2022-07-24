@@ -45,7 +45,7 @@
                         </button>
                     </li>
 
-                    @if($tube->state >= 1)
+                    @if(isset($tube) && $tube->state >= 1)
                         <li class="mr-2" role="presentation">
                             <button
                                 class="inline-flex p-4 rounded-t-lg border-b-2 border-transparent group"
@@ -60,7 +60,7 @@
                         </li>
                     @endif
 
-                    @if($tube->state >= 2)
+                    @if(isset($tube) && $tube->state >= 2)
                         <li class="mr-2" role="presentation">
                             <button
                                 class="inline-flex p-4 rounded-t-lg border-b-2 border-transparent group"
@@ -89,13 +89,13 @@
                     @include('network.inc.lines')
                 </div>
 
-                @if($tube->state >= 1)
+                @if(isset($tube) && $tube->state >= 1)
                     <div class="hidden rounded-lg dark:bg-gray-800" id="cables" role="tabpanel" aria-labelledby="cables-tab">
                         @include('network.inc.cables')
                     </div>
                 @endif
 
-                @if($tube->state >= 2)
+                @if(isset($tube) && $tube->state >= 2)
                     <div class="hidden rounded-lg dark:bg-gray-800" id="odc" role="tabpanel" aria-labelledby="odc-tab">
                         @include('network.inc.odcToJc')
                     </div>

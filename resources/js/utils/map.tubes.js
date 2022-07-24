@@ -135,6 +135,8 @@ export const drawCableTubes = async (map) => {
                     }
                 });
 
+                let cableToolTip = geoJSONCable.bindTooltip(cable.name);
+
                 geoJSONCable
                     .on('mouseover', (e) => {
                         geoJSONCable.setStyle({
@@ -145,9 +147,43 @@ export const drawCableTubes = async (map) => {
                         geoJSONCable.setStyle({
                             opacity: cable.opacity,
                         });
+                    })
+                    .on('click', (e) => {
+                        cableToolTip.openTooltip(e.latlng);
                     });
 
-                groupCables.push(geoJSONCable);
+                // CHILD CABLE ODC
+                let childs = cable.lines.filter(line => {
+                    return line.children.length > 0;
+                });
+
+                let groupCableChild = [];
+                if (childs.length > 0) {
+                    childs.forEach((child) => {
+                        child.children.forEach((childCable) => {
+                            let geoJSONCableChild = L.geoJSON(childCable.lines_for_map, {
+                                style: {
+                                    color: childCable.color,
+                                    weight: weightCable,
+                                    opacity: childCable.opacity,
+                                    offset: offsetCable,
+                                }
+                            });
+
+                            let cableChildToolTip = geoJSONCableChild.bindTooltip(childCable.name);
+
+                            geoJSONCableChild
+                                .on('click', (e) => {
+                                    cableChildToolTip.openTooltip(e.latlng);
+                                });
+
+                            groupCableChild.push(geoJSONCableChild);
+                        });
+
+                    });
+                }
+
+                groupCables.push(L.layerGroup([geoJSONCable, ...groupCableChild]));
                 groupCablesGlobal.push(geoJSONCable);
             });
         });

@@ -25,7 +25,9 @@ class CableResource extends JsonResource
             'color'         => $this->color,
             'weight'        => $this->weight,
             'opacity'       => $this->opacity,
-            'lines'         => $this->lines,
+            'lines'         => $this->lines->map(function ($row) {
+                return new CableLineResource($row);
+            }),
             'lines_for_map' => new LineString(
                 $this->lines->map(function (CableLine $line) {
                     return new Point($line->lng, $line->lat);

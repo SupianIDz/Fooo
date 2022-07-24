@@ -55,6 +55,24 @@ alpine.data('tube', () => ({
         select.dispatchEvent(new Event('change'));
     },
 
+    initSelectODC(row, indexODC, indexCableODC) {
+        const select = document.getElementById('selectODCMarker' + indexODC + '_' + indexCableODC);
+
+        select.addEventListener('change', (e) => {
+            row.marker = e.target.value;
+            getMarker(e.target.value).then(response => {
+                row.address = response.address;
+                row.coordinates = response.location.coordinates.reverse();
+            });
+        });
+
+        if (window.uuid && row.marker !== 0) {
+            select.value = row.marker;
+        }
+
+        select.dispatchEvent(new Event('change'));
+    },
+
     // ADD NEW ROW
     add() {
         this.lines.push({
@@ -98,6 +116,17 @@ alpine.data('tube', () => ({
             opacity: 0.7,
             description: '',
             lines: [],
+        });
+    },
+
+    addCableToODC(odc) {
+        odc.lines.push({
+            name: 'Jalur #' + (odc.lines.length + 1),
+            show: odc.lines.length === 0,
+            coordinates: [null, null],
+            address: '',
+            manual: false,
+            marker: 0,
         });
     },
     // ADD NEW ROW

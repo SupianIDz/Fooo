@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="flex flex-row mb-3 w-full space-x-3">
-                    @include('network.inc.odcToJc_line')
+                    @include('network.inc.odcToJc_port')
                 </div>
             </div>
         </div>

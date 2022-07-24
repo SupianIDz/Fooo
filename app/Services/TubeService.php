@@ -121,25 +121,39 @@ class TubeService
         $tube->cables()->whereNotIn('uuid', $cablesUUID)->delete();
 
         if ($cablesUUID->count() > 0) {
-//            $tube->update([
-//                'state' => 1,
-//            ]);
+            $tube->update([
+                'state' => 2,
+            ]);
         }
 
         // ODCS
         if ($request->has('cableAttachedToODC')) {
             collect($request->get('cableAttachedToODC'))->each(function ($cableLine) use ($tube) {
                 collect($cableLine['odcs'])->each(function (array $odc) use ($cableLine) {
-                    CableFromOdc::create([
+                    $odcModel = CableFromOdc::create([
                         'name'          => $odc['name'],
                         'description'   => $odc['description'],
                         'color'         => $odc['color'],
                         'weight'        => $odc['weight'],
                         'opacity'       => $odc['opacity'],
                         'cable_line_id' => $cableLine['id'],
+                        'port_id'       => $odc['port'],
                     ]);
+
+                    foreach ($odc['lines'] as $line) {
+                        $odcModel->lines()->create(array_merge($line, [
+                            'name'        => $line['name'],
+                            'lat'         => $line['coordinates'][0],
+                            'lng'         => $line['coordinates'][1],
+                            'attached_on' => $line['manual'] ? null : $line['marker'],
+                        ]));
+                    }
                 });
             });
+
+            $tube->update([
+                'state' => 3,
+            ]);
         }
 
         return $tube;
