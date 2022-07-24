@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\JoinClosures\JoinClosureCableResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,7 +22,7 @@ class CableLineFromODCResource extends JsonResource
             'attached'    => $this->attached,
             'address'     => $this->address,
             'children'    => $this->children->map(function ($row) {
-                return $row;
+                return new JoinClosureCableResource($row);
             }),
         ];
     }

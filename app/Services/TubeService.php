@@ -253,7 +253,7 @@ class TubeService
         collect($data)->map(function ($row) {
             $lineODC = CableFromOdcLine::where('uuid', $row['uuid'])->first();
 
-            $jcUUIDS = collect($row['jcs'])->each(function ($jc) use ($lineODC) {
+            $jcUUIDS = collect($row['jcs'])->map(function ($jc) use ($lineODC) {
                 if (! isset($jc['uuid'])) {
                     $jcModel = JoinClosureCable::create(array_merge($jc, [
                         'cable_from_odc_line_id' => $lineODC->id,
@@ -272,6 +272,31 @@ class TubeService
                         'port_id'       => $jc['port'],
                     ]);
                 }
+
+                $jcLinesUUID = collect($jc['lines'])->map(function ($line) use ($jcModel) {
+                    if (! isset($line['uuid'])) {
+                        $q = $jcModel->lines()->create(array_merge($line, [
+                            'name'        => $line['name'],
+                            'lat'         => $line['coordinates'][0],
+                            'lng'         => $line['coordinates'][1],
+                            'attached_on' => $line['manual'] ? null : $line['marker'],
+                        ]));
+                    } else {
+                        $q = $jcModel->lines()->where('uuid', $line['uuid'])->first();
+
+                        $q->update([
+                            'name'        => $line['name'],
+                            'lat'         => $line['coordinates'][0],
+                            'lng'         => $line['coordinates'][1],
+                            'attached_on' => $line['manual'] ? null : $line['marker'],
+                        ]);
+                    }
+
+                    return $q->uuid;
+                });
+
+                // delete lines that are not in the uuid list
+                $jcModel->lines()->whereNotIn('uuid', $jcLinesUUID)->delete();
 
                 return $jcModel->uuid;
             });

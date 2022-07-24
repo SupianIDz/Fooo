@@ -298,7 +298,7 @@ alpine.data('tube', () => ({
                                     let childODCLines = [];
                                     child.lines_detail.forEach((foo, index) => {
                                         childODCLines.push({
-                                            port: foo.port,
+                                            port: foo.port_id,
                                             uuid: foo.uuid,
                                             name: foo.name,
                                             show: false,
@@ -313,10 +313,26 @@ alpine.data('tube', () => ({
                                             let jcs = [];
 
                                             foo.children.forEach((child, index) => {
+
+                                                let childJCLines = [];
+
+                                                child.lines_detail.forEach((jcLine, index) => {
+                                                    childJCLines.push({
+                                                        port: jcLine.port_id,
+                                                        uuid: jcLine.uuid,
+                                                        name: jcLine.name,
+                                                        show: false,
+                                                        coordinates: [jcLine.lat, jcLine.lng],
+                                                        address: jcLine.address,
+                                                        manual: jcLine.attached_on === null,
+                                                        marker: jcLine.attached_on,
+                                                    });
+                                                })
+
                                                 jcs.push({
                                                     ...child,
                                                     port: child.port_id,
-                                                    lines: [],
+                                                    lines: childJCLines,
                                                 });
                                             });
 
