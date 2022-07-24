@@ -64,7 +64,7 @@ export const drawCableTubes = async (map) => {
                 style: {
                     color: tube.color,
                     weight: weight,
-                    opacity: 1,
+                    opacity: tube.opacity,
                     offset: offset,
                 }
             });
@@ -90,6 +90,16 @@ export const drawCableTubes = async (map) => {
                 })
                 .on('contextmenu', (e) => {
                     resetAllTubes();
+                })
+                .on('mouseover', (e) => {
+                    geojson.setStyle({
+                        opacity: 1,
+                    });
+                })
+                .on('mouseout', (e) => {
+                    geojson.setStyle({
+                        opacity: tube.opacity,
+                    });
                 });
 
             groupTube.push(geojson.addTo(map));
@@ -101,29 +111,41 @@ export const drawCableTubes = async (map) => {
                 tube.cables[Math.floor((tube.cables.length - 1) / 2)]
             );
 
-            tube.cables.forEach(cable => {
+            tube.cables.forEach((cable, indexCable) => {
 
                 let offsetCable = 0;
                 let weightCable = cable.weight;
 
-                if (index < median) {
+                if (indexCable < medianCable) {
                     offsetCable = weightCable * (cdx++)
-                } else if (index > median) {
+                } else if (indexCable > medianCable) {
                     offsetCable = weightCable * -(cdy++)
                 }
 
-                if (index === median) {
+                if (indexCable === medianCable) {
                     offsetCable = 0;
                 }
 
                 let geoJSONCable = L.geoJSON(cable.lines_for_map, {
                     style: {
                         color: cable.color,
-                        weight: cable.weight,
+                        weight: weightCable,
                         opacity: cable.opacity,
                         offset: offsetCable,
                     }
                 });
+
+                geoJSONCable
+                    .on('mouseover', (e) => {
+                        geoJSONCable.setStyle({
+                            opacity: 1,
+                        });
+                    })
+                    .on('mouseout', (e) => {
+                        geoJSONCable.setStyle({
+                            opacity: cable.opacity,
+                        });
+                    });
 
                 groupCables.push(geoJSONCable);
                 groupCablesGlobal.push(geoJSONCable);

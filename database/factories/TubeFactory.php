@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Cable;
 use App\Models\Marker;
 use App\Models\Tube;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -41,6 +42,28 @@ class TubeFactory extends Factory
                     'lng'         => $marker->location->getLng(),
                     'attached_on' => $marker->id,
                 ]);
+            }
+
+            for ($i = 0; $i < 3; $i++) {
+                /**
+                 * @var Cable $cable
+                 */
+                $cable = $tube->cables()->create([
+                    'name'        => 'Kabel ' . ($i + 1),
+                    'color'       => sprintf('#%06X', mt_rand(0, 0xFFFFFF)),
+                    'weight'      => 5,
+                    'opacity'     => 0.7,
+                    'description' => 'Cable ' . ($i + 1),
+                ]);
+
+                foreach ($markers as $index => $marker) {
+                    $cable->lines()->create([
+                        'name'        => 'Jalur Kabel ' . ($i + 1) . ' #' . ($index + 1),
+                        'lat'         => $marker->location->getLat(),
+                        'lng'         => $marker->location->getLng(),
+                        'attached_on' => $marker->id,
+                    ]);
+                }
             }
         });
     }
