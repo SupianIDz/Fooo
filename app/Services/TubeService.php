@@ -6,7 +6,6 @@ use App\Http\Requests\Tubes\CreateTubeRequest;
 use App\Models\Cable;
 use App\Models\CableFromOdc;
 use App\Models\CableFromOdcLine;
-use App\Models\CableLineFromOdc;
 use App\Models\JoinClosureCable;
 use App\Models\Port;
 use App\Models\Tube;
@@ -14,6 +13,7 @@ use Illuminate\Http\Request;
 
 class TubeService
 {
+    protected array $joinClosureUUIDDs = [];
 
     /**
      * @param  array $tube
@@ -210,6 +210,9 @@ class TubeService
             $this->updateODCCableAttachToJC($request->get('odcCableAttachToJC'));
         }
 
+        // delete cables that are not in the uuid list
+        JoinClosureCable::whereNotIn('uuid', $this->joinClosureUUIDDs)->delete();
+
         return $tube;
     }
 
@@ -248,7 +251,11 @@ class TubeService
         $cable->lines()->whereNotIn('uuid', $cableLinesUUID)->delete();
     }
 
-    protected function updateODCCableAttachToJC(array $data)
+    /**
+     * @param  array $data
+     * @return void
+     */
+    protected function updateODCCableAttachToJC(array $data) : void
     {
         collect($data)->map(function ($row) {
             $lineODC = CableFromOdcLine::where('uuid', $row['uuid'])->first();
@@ -301,8 +308,7 @@ class TubeService
                 return $jcModel->uuid;
             });
 
-            // delete jcs that are not in the uuid list
-            JoinClosureCable::whereNotIn('uuid', $jcUUIDS)->delete();
+            $this->joinClosureUUIDDs = array_merge($this->joinClosureUUIDDs, $jcUUIDS->toArray());
         });
     }
 }

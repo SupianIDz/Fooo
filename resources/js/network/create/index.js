@@ -312,6 +312,7 @@ alpine.data('tube', () => ({
                                         if (foo.attached.ports.length > 0) {
                                             let jcs = [];
 
+                                            console.log(foo);
                                             foo.children.forEach((child, index) => {
 
                                                 let childJCLines = [];
@@ -369,8 +370,6 @@ alpine.data('tube', () => ({
                         });
 
                     });
-
-                    console.log(this.odcLinesWithJCPorts);
                 });
         }
     },
@@ -410,7 +409,7 @@ alpine.data('tube', () => ({
                                 customClass: 'select-none uppercase text-slate-500',
                             })
                                 .then(() => {
-                                    // window.location.href = route('tubes.edit', r.data.data.uuid);
+                                    window.location.href = route('tubes.edit', r.data.data.uuid);
                                 });
                         });
                 }
