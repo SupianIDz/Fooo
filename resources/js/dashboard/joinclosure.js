@@ -11,7 +11,7 @@ export const JoinClosure = (line) => {
     return jcs;
 }
 
-export const drawJoinClosure = (map, parent) => {
+export const drawJoinClosure = (map, parent, offsetParent) => {
     let jcs = JoinClosure(parent);
 
     let group = [];
@@ -19,9 +19,9 @@ export const drawJoinClosure = (map, parent) => {
         let geoJSONCable = L.geoJSON(joinClosure.lines_for_map, {
             style: {
                 color: joinClosure.color,
-                weight: joinClosure.weight,
+                weight: joinClosure.weight * 3,
                 opacity: joinClosure.opacity,
-                offset: 0,
+                offset: offsetParent,
             }
         });
 

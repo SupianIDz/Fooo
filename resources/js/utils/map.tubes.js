@@ -115,7 +115,7 @@ export const drawCableTubes = async (map) => {
             tube.cables.forEach((cable, indexCable) => {
 
                 let offsetCable = 0;
-                let weightCable = cable.weight;
+                let weightCable = cable.weight * 3;
 
                 if (indexCable < medianCable) {
                     offsetCable = weightCable * (cdx++)
@@ -158,12 +158,6 @@ export const drawCableTubes = async (map) => {
 
                         child.children.forEach((childCable) => {
 
-                            let joinClosureLine = drawJoinClosure(map, childCable);
-
-                            joinClosureLine.forEach(joinClosure => {
-                                joinClosureGroup.push(joinClosure);
-                            });
-
                             let offsetCable = 0;
                             let weightCable = childCable.weight;
 
@@ -176,6 +170,14 @@ export const drawCableTubes = async (map) => {
                             if (indexCable === medianCable) {
                                 offsetCable = 0;
                             }
+
+                            // JC
+                            let joinClosureLine = drawJoinClosure(map, childCable, offsetCable);
+
+                            joinClosureLine.forEach(joinClosure => {
+                                joinClosureGroup.push(joinClosure);
+                            });
+                            // END OF JC
 
                             let geoJSONCableChild = L.geoJSON(childCable.lines_for_map, {
                                 style: {
