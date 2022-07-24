@@ -75,7 +75,7 @@
                         </li>
                     @endif
 
-                    @if(isset($tube) && $tube->state >= 4)
+                    @if(isset($tube) && $tube->state >= 3)
                         <li class="mr-2" role="presentation">
                             <button
                                 class="inline-flex p-4 rounded-t-lg border-b-2 border-transparent group"
@@ -118,7 +118,7 @@
 
                 @if(isset($tube) && $tube->state >= 3)
                     <div class="hidden rounded-lg dark:bg-gray-800" id="jc" role="tabpanel" aria-labelledby="jc-tab">
-                        @include('network.inc.odcToJc')
+                        @include('network.inc.jcToOdp')
                     </div>
                 @endif
             </div>

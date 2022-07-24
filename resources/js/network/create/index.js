@@ -10,6 +10,7 @@ alpine.data('tube', () => ({
     lines: [],
     cables: [],
     cableLinesWithODCPorts: [],
+    odcLinesWithJCPorts: [],
 
     detail: {
         name: 'Tube #1',
@@ -64,6 +65,27 @@ alpine.data('tube', () => ({
 
     initSelectODC(row, indexODC, indexCableODC) {
         const select = document.getElementById('selectODCMarker' + indexODC + '_' + indexCableODC);
+
+        select.addEventListener('change', (e) => {
+            row.marker = e.target.value;
+            getMarker(e.target.value).then(response => {
+                row.address = response.address;
+                row.coordinates = response.location.coordinates.reverse();
+            })
+                .catch(error => {
+                    console.log('INIT SELECT ODC');
+                });
+        });
+
+        if (window.uuid && row.marker !== 0) {
+            select.value = row.marker;
+        }
+
+        select.dispatchEvent(new Event('change'));
+    },
+
+    initSelectJC(row, indexJC, indexCableJC) {
+        const select = document.getElementById('selectJCMarker' + indexJC + '_' + indexCableJC);
 
         select.addEventListener('change', (e) => {
             row.marker = e.target.value;
@@ -139,6 +161,29 @@ alpine.data('tube', () => ({
         odc.lines.push({
             name: 'Jalur #' + (odc.lines.length + 1),
             show: odc.lines.length === 0,
+            coordinates: [null, null],
+            address: '',
+            manual: false,
+            marker: 0,
+        });
+    },
+
+    addOutputPortJC(jc) {
+        jc.jcs.push({
+            port: 0,
+            name: 'Output Port #' + (jc.jcs.length + 1),
+            color: '#000000',
+            weight: 20,
+            opacity: 0.7,
+            description: '',
+            lines: [],
+        });
+    },
+
+    addCableToJC(odp) {
+        odp.lines.push({
+            name: 'Jalur #' + (odp.lines.length + 1),
+            show: odp.lines.length === 0,
             coordinates: [null, null],
             address: '',
             manual: false,
@@ -262,9 +307,16 @@ alpine.data('tube', () => ({
                                             manual: foo.attached_on === null,
                                             marker: foo.attached_on,
                                         });
-                                    });
 
-                                    console.log(childODCLines);
+                                        // JC
+                                        if (foo.attached.ports.length > 0) {
+                                            this.odcLinesWithJCPorts.push({
+                                                ...foo,
+                                                jcs: [],
+                                            });
+                                        }
+                                        //END OF JC
+                                    });
 
                                     odcs.push({
                                         ...child,
@@ -291,6 +343,8 @@ alpine.data('tube', () => ({
                         });
 
                     });
+
+                    console.log(this.odcLinesWithJCPorts);
                 });
         }
     },

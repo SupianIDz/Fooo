@@ -18,6 +18,7 @@ class CableLineFromODCResource extends JsonResource
             'uuid'        => $this->uuid,
             'name'        => $this->name,
             'attached_on' => $this->attached_on,
+            'attached'    => $this->attached,
             'address'     => $this->address,
         ];
     }
