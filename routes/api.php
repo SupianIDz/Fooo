@@ -24,4 +24,9 @@ Route::group(['as' => 'api.'], function () {
     Route::resource('markers', MarkerController::class);
 
     Route::resource('cablelines', CableLineController::class);
+
+    /**
+     *
+     */
+    Route::get('helpers/findcablehasjc/{tube:uuid}', [CableLineController::class, 'findCableHasJC'])->name('helpers.cable.hasjc');
 });

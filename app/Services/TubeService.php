@@ -160,14 +160,30 @@ class TubeService
                         'status' => false,
                     ]);
 
-                    foreach ($odc['lines'] as $line) {
-                        $odcModel->lines()->create(array_merge($line, [
-                            'name'        => $line['name'],
-                            'lat'         => $line['coordinates'][0],
-                            'lng'         => $line['coordinates'][1],
-                            'attached_on' => $line['manual'] ? null : $line['marker'],
-                        ]));
-                    }
+                    $odcLinesUUID = collect($odc['lines'])->map(function ($line) use ($odcModel) {
+                        if (! isset($line['uuid'])) {
+                            $x = $odcModel->lines()->create(array_merge($line, [
+                                'name'        => $line['name'],
+                                'lat'         => $line['coordinates'][0],
+                                'lng'         => $line['coordinates'][1],
+                                'attached_on' => $line['manual'] ? null : $line['marker'],
+                            ]));
+
+                            return $x->uuid;
+                        } else {
+                            $odcModel->lines()->where('uuid', $line['uuid'])->update([
+                                'name'        => $line['name'],
+                                'lat'         => $line['coordinates'][0],
+                                'lng'         => $line['coordinates'][1],
+                                'attached_on' => $line['manual'] ? null : $line['marker'],
+                            ]);
+
+                            return $line['uuid'];
+                        }
+                    });
+
+                    // delete lines that are not in the uuid list
+                    $odcModel->lines()->whereNotIn('uuid', $odcLinesUUID)->delete();
 
                     return $odcModel->uuid;
                 });

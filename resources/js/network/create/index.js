@@ -160,6 +160,10 @@ alpine.data('tube', () => ({
     removeOutputPortODC(cable, index) {
         cable.odcs.splice(index, 1);
     },
+    removeODCLine(odc, index) {
+        console.log(odc, index);
+        odc.lines.splice(index, 1);
+    },
     // REMOVE ROW
 
     // CREATE
@@ -247,8 +251,6 @@ alpine.data('tube', () => ({
 
                                 line.children.forEach((child, index) => {
                                     let childODCLines = [];
-
-                                    console.log(child.lines_detail);
                                     child.lines_detail.forEach((foo, index) => {
                                         childODCLines.push({
                                             port: foo.port,
