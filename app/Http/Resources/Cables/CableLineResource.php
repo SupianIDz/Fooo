@@ -18,10 +18,12 @@ class CableLineResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'uuid'     => $this->uuid,
-            'name'     => $this->name,
-            'address'  => $this->address,
-            'children' => $this->child->map(function ($row) {
+            'uuid'        => $this->uuid,
+            'name'        => $this->name,
+            'address'     => $this->address,
+            'attached_on' => $this->attached_on,
+            'attached'    => $this->attached,
+            'children'    => $this->child->map(function ($row) {
                 return new CableFromODCResource($row);
             }),
         ];

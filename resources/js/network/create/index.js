@@ -226,19 +226,34 @@ alpine.data('tube', () => ({
                             });
 
                             if (line.attached.ports.length > 0) {
+
+                                let odcs = [];
+
+                                line.children.forEach((child, index) => {
+
+                                    let childODCLines = [];
+                                    child.lines_detail.forEach((line, index) => {
+                                        childODCLines.push({
+                                            uuid: line.uuid,
+                                            name: line.name,
+                                            show: false,
+                                            coordinates: [line.lat, line.lng],
+                                            address: line.address,
+                                            manual: line.attached_on === null,
+                                            marker: line.attached_on,
+                                        });
+                                    });
+
+                                    odcs.push({
+                                        ...child,
+                                        lines: childODCLines,
+                                        show: false,
+                                    });
+                                });
+
                                 this.cableLinesWithODCPorts.push({
                                     ...line,
-                                    odcs: [
-                                        {
-                                            port: 0,
-                                            name: 'Output Port # 1',
-                                            color: '#000000',
-                                            weight: 20,
-                                            opacity: 0.7,
-                                            description: '',
-                                            lines: [],
-                                        }
-                                    ],
+                                    odcs: odcs,
                                 });
                             }
                         });

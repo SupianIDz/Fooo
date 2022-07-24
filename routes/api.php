@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\MarkerController;
 use App\Http\Controllers\API\TubeController;
+use App\Http\Controllers\CableLineController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,4 +22,6 @@ Route::group(['as' => 'api.'], function () {
 
     # MARKERS
     Route::resource('markers', MarkerController::class);
+
+    Route::resource('cablelines', CableLineController::class);
 });
