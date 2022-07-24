@@ -28,6 +28,10 @@ alpine.data('tube', () => ({
             });
         });
 
+        if (window.uuid) {
+            select.value = row.marker;
+        }
+
         select.dispatchEvent(new Event('change'));
     },
 
@@ -41,6 +45,10 @@ alpine.data('tube', () => ({
                 row.coordinates = response.location.coordinates.reverse();
             });
         });
+
+        if (window.uuid) {
+            select.value = row.marker;
+        }
 
         select.dispatchEvent(new Event('change'));
     },
@@ -146,12 +154,13 @@ alpine.data('tube', () => ({
 
                     // TUBE LINES
                     data.raw_lines.forEach((line, index) => {
+                        console.log(line);
                         this.lines.push({
                             name: line.name,
                             show: index === 0,
                             coordinates: [line.lat, line.lng],
                             address: line.address,
-                            manual: line.attached_on === null,
+                            manual: line.attached === null,
                             marker: line.attached_on,
                         });
                     });

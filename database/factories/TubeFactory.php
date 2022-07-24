@@ -37,6 +37,7 @@ class TubeFactory extends Factory
 
             foreach ($markers as $marker) {
                 $tube->lines()->create([
+                    'name'        => $this->faker->word(),
                     'address'     => $this->faker->address(),
                     'lat'         => $marker->location->getLat(),
                     'lng'         => $marker->location->getLng(),

@@ -83,7 +83,7 @@
                                 {{ $tube->opacity * 100 }}<small>%</small>
                             </td>
                             <td class="py-4 px-6">
-                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                <a href="{{ route('tubes.edit', $tube->uuid) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                             </td>
                         </tr>
                     @endforeach
