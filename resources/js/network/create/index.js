@@ -9,6 +9,8 @@ import { getTube } from "../../utils/xhr/tubes";
 alpine.data('tube', () => ({
     lines: [],
     cables: [],
+    cableLinesWithODCPorts: [],
+
     detail: {
         name: 'Tube #1',
         color: '#000000',
@@ -86,6 +88,18 @@ alpine.data('tube', () => ({
             marker: 0,
         });
     },
+
+    addOutputPortODC(cable) {
+        cable.odcs.push({
+            port: 0,
+            name: 'Output Port #' + (cable.odcs.length + 1),
+            color: '#000000',
+            weight: 20,
+            opacity: 0.7,
+            description: '',
+            lines: [],
+        });
+    },
     // ADD NEW ROW
 
     // REMOVE ROW
@@ -97,6 +111,9 @@ alpine.data('tube', () => ({
     },
     removeCableLine(cable, index) {
         cable.lines.splice(index, 1);
+    },
+    removeOutputPortODC(cable, index) {
+        cable.odcs.splice(index, 1);
     },
     // REMOVE ROW
 
@@ -178,6 +195,23 @@ alpine.data('tube', () => ({
                                 manual: line.attached_on === null,
                                 marker: line.attached_on,
                             });
+
+                            if (line.attached.ports.length > 0) {
+                                this.cableLinesWithODCPorts.push({
+                                    ...line,
+                                    odcs: [
+                                        {
+                                            port: 0,
+                                            name: 'Output Port # 1',
+                                            color: '#000000',
+                                            weight: 20,
+                                            opacity: 0.7,
+                                            description: '',
+                                            lines: [],
+                                        }
+                                    ],
+                                });
+                            }
                         });
 
                         this.cables.push({
@@ -189,6 +223,7 @@ alpine.data('tube', () => ({
                             description: cable.description,
                             lines: lines,
                         });
+
                     });
                 });
         }
@@ -200,6 +235,7 @@ alpine.data('tube', () => ({
 
     // CREATE
     update() {
+
         Swal.fire({
             icon: 'question',
             title: 'APAKAH ANDA YAKIN ?',
@@ -217,6 +253,7 @@ alpine.data('tube', () => ({
                             lines: this.lines,
                             detail: this.detail,
                             cables: this.cables,
+                            cableAttachedToODC: this.cableLinesWithODCPorts,
                         })
                         .then(r => {
 

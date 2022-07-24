@@ -18,7 +18,7 @@ class Tube extends Model
      * @var string[]
      */
     protected $fillable = [
-        'name', 'weight', 'color', 'opacity', 'description', 'uuid',
+        'name', 'weight', 'color', 'opacity', 'description', 'uuid', 'state',
     ];
 
     /**

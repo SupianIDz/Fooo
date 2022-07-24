@@ -6,30 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * @return void
-     */
-    public function up() : void
+    public function up()
     {
-        Schema::create('tubes', function (Blueprint $table) {
+        Schema::create('cable_from_odcs', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('cable_line_id')->constrained()->cascadeOnDelete();
             $table->string('uuid');
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('color');
             $table->float('weight')->default(20);
             $table->float('opacity')->default(0.7);
-            $table->integer('state')->default(1);
+            $table->foreignId('port_id')->constrained();
             $table->timestamps();
             $table->softDeletes();
         });
     }
 
-    /**
-     * @return void
-     */
-    public function down() : void
+    public function down()
     {
-        Schema::dropIfExists('tubes');
+        Schema::dropIfExists('cable_from_odcs');
     }
 };

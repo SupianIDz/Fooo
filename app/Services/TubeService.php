@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Http\Requests\Tubes\CreateTubeRequest;
 use App\Models\Cable;
+use App\Models\CableFromOdc;
+use App\Models\CableLineFromOdc;
 use App\Models\Tube;
 use Illuminate\Http\Request;
 
@@ -17,7 +19,9 @@ class TubeService
      */
     public function create(array $tube, array $lines = []) : Tube
     {
-        $tube = Tube::create($tube);
+        $tube = Tube::create(array_merge($tube, [
+            'state' => 1,
+        ]));
 
         foreach ($lines as $line) {
             $tube->lines()->create(array_merge($line, [
@@ -115,6 +119,28 @@ class TubeService
 
         // delete cables that are not in the uuid list
         $tube->cables()->whereNotIn('uuid', $cablesUUID)->delete();
+
+        if ($cablesUUID->count() > 0) {
+//            $tube->update([
+//                'state' => 1,
+//            ]);
+        }
+
+        // ODCS
+        if ($request->has('cableAttachedToODC')) {
+            collect($request->get('cableAttachedToODC'))->each(function ($cableLine) use ($tube) {
+                collect($cableLine['odcs'])->each(function (array $odc) use ($cableLine) {
+                    CableFromOdc::create([
+                        'name'          => $odc['name'],
+                        'description'   => $odc['description'],
+                        'color'         => $odc['color'],
+                        'weight'        => $odc['weight'],
+                        'opacity'       => $odc['opacity'],
+                        'cable_line_id' => $cableLine['id'],
+                    ]);
+                });
+            });
+        }
 
         return $tube;
     }
