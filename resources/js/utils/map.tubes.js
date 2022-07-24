@@ -1,5 +1,6 @@
 import L from 'leaflet';
 import { getTubes } from "./xhr/tubes";
+import { drawJoinClosure } from "../dashboard/joinclosure";
 
 export const drawCableTubes = async (map) => {
 
@@ -144,6 +145,7 @@ export const drawCableTubes = async (map) => {
 
                 // CHILD CABLE ODC
                 let groupCableChild = [];
+                let joinClosureGroup = [];
                 if (childs.length > 0) {
 
                     childs.forEach((child) => {
@@ -155,6 +157,12 @@ export const drawCableTubes = async (map) => {
                         );
 
                         child.children.forEach((childCable) => {
+
+                            let joinClosureLine = drawJoinClosure(map, childCable);
+
+                            joinClosureLine.forEach(joinClosure => {
+                                joinClosureGroup.push(joinClosure);
+                            });
 
                             let offsetCable = 0;
                             let weightCable = childCable.weight;
@@ -191,7 +199,7 @@ export const drawCableTubes = async (map) => {
                     });
                 }
 
-                let group = L.layerGroup([geoJSONCable, ...groupCableChild]);
+                let group = L.layerGroup([geoJSONCable, ...groupCableChild, ...joinClosureGroup]);
 
                 groupCables.push(group);
                 groupCablesGlobal.push(group);

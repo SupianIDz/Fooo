@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\JoinClosures;
 
+use Grimzy\LaravelMysqlSpatial\Types\LineString;
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,6 +28,22 @@ class JoinClosureCableResource extends JsonResource
             'name'                   => $this->name,
             'weight'                 => $this->weight,
             'lines_detail'           => $this->lines,
+            'lines_for_map'          => $this->getLineString(),
         ];
+    }
+
+    /**
+     * @return LineString
+     */
+    protected function getLineString() : LineString
+    {
+        $lines = [];
+        $lines[] = new Point($this->parent->lng, $this->parent->lat);
+
+        foreach ($this->lines as $line) {
+            $lines[] = new Point($line->lng, $line->lat);
+        }
+
+        return new LineString($lines);
     }
 }

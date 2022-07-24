@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasUUID;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -19,6 +20,14 @@ class JoinClosureCable extends Model
     protected $fillable = [
         'cable_from_odc_line_id', 'uuid', 'name', 'description', 'color', 'weight', 'opacity', 'port_id',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function parent() : BelongsTo
+    {
+        return $this->belongsTo(CableFromOdcLine::class, 'cable_from_odc_line_id');
+    }
 
     /**
      * @return HasMany
