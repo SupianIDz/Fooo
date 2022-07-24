@@ -4,10 +4,12 @@ import { getTubes } from "./xhr/tubes";
 export const drawCableTubes = async (map) => {
 
     const tubes = await getTubes({
-        lines: true
+        lines: true,
+        cables: true,
     });
 
     const groupTube = [];
+    const groupCablesGlobal = [];
 
     // hiding all tubes
     function hideTubes() {
@@ -25,6 +27,10 @@ export const drawCableTubes = async (map) => {
             map.removeLayer(tube);
         });
 
+        groupCablesGlobal.forEach(function (cable) {
+            map.removeLayer(cable);
+        });
+
         drawTubeWrapped();
     }
 
@@ -37,6 +43,8 @@ export const drawCableTubes = async (map) => {
         let idx = 1;
         let idy = 1;
         tubes.forEach((tube, index) => {
+
+            const groupCables = [];
 
             let offset = 0;
 
@@ -74,12 +82,52 @@ export const drawCableTubes = async (map) => {
                     geojson.eachLayer(function (layer) {
                         layer.setOffset(0);
                     });
+
+                    // draw cables
+                    groupCables.forEach(cable => {
+                        map.addLayer(cable);
+                    });
                 })
                 .on('contextmenu', (e) => {
                     resetAllTubes();
                 });
 
             groupTube.push(geojson.addTo(map));
+
+            // CABLE
+            let cdx = 1;
+            let cdy = 1;
+            let medianCable = tube.cables.indexOf(
+                tube.cables[Math.floor((tube.cables.length - 1) / 2)]
+            );
+
+            tube.cables.forEach(cable => {
+
+                let offsetCable = 0;
+                let weightCable = cable.weight;
+
+                if (index < median) {
+                    offsetCable = weightCable * (cdx++)
+                } else if (index > median) {
+                    offsetCable = weightCable * -(cdy++)
+                }
+
+                if (index === median) {
+                    offsetCable = 0;
+                }
+
+                let geoJSONCable = L.geoJSON(cable.lines_for_map, {
+                    style: {
+                        color: cable.color,
+                        weight: cable.weight,
+                        opacity: cable.opacity,
+                        offset: offsetCable,
+                    }
+                });
+
+                groupCables.push(geoJSONCable);
+                groupCablesGlobal.push(geoJSONCable);
+            });
         });
     }
 
