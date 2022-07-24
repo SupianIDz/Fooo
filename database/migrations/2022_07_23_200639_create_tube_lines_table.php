@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tube_lines', function (Blueprint $table) {
             $table->id();
             $table->string('uuid');
-            $table->foreignId('tube_id')->constrained();
+            $table->foreignId('tube_id')->constrained()->cascadeOnDelete();
             $table->string('name')->nullable();
             $table->text('address')->nullable();
             $table->double('lat')->nullable();

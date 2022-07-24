@@ -63,10 +63,20 @@ class MarkerSeeder extends Seeder
         }
 
         foreach ($markers as $marker) {
-            Marker::factory()->create(array_merge($marker, [
+            /**
+             * @var Marker $odc
+             */
+            $odc = Marker::factory()->create(array_merge($marker, [
                 'type' => Marker::TYPE_ODC,
                 'name' => str_replace('TIANG', 'ODC', $marker['name']),
             ]));
+
+            for ($i = 0; $i < 24; $i++) {
+                $odc->ports()->create([
+                    'name'   => 'Port ' . ($i + 1),
+                    'status' => true,
+                ]);
+            }
         }
     }
 }

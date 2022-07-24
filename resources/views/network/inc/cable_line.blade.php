@@ -48,7 +48,8 @@
                         <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">
                             Kordinat Berdasarkan Marker
                         </label>
-                        <select class="form" :id="'selectCore' + indexCableLine" x-ref="selectCore" x-init="$nextTick(() => initSelectCore(row, indexCableLine))">
+                        <select class="form" :id="'selectCore' + indexCable + '_' + indexCableLine" x-ref="selectCore"
+                                x-init="$nextTick(() => initSelectCore(row, indexCable, indexCableLine))">
                             @foreach($markers as $marker)
                                 <option value="{{ $marker->id }}">{{ $marker->name }}</option>
                             @endforeach

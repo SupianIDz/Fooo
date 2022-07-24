@@ -64,9 +64,9 @@ class TubeService
     /**
      * @param  Tube    $tube
      * @param  Request $request
-     * @return void
+     * @return Tube
      */
-    public function updateFromRequest(Tube $tube, Request $request)
+    public function updateFromRequest(Tube $tube, Request $request) : Tube
     {
         $tube->update($request->get('detail'));
 
@@ -83,7 +83,7 @@ class TubeService
         }
 
         $cablesUUID = collect($request->get('cables'))->map(function ($cable) use ($tube) {
-            if (isset($tube['uuid'])) {
+            if (isset($cable['uuid'])) {
                 $tube->cables()->where('uuid', $cable['uuid'])->update([
                     'name'        => $cable['name'],
                     'color'       => $cable['color'],
@@ -92,9 +92,14 @@ class TubeService
                     'description' => $cable['description'],
                 ]);
 
+                $this->updateCableLines($cable['uuid'], $cable['lines']);
+
                 return $cable['uuid'];
             } else {
-                $tube = $tube->cables()->create([
+                /**
+                 * @var Cable $row
+                 */
+                $row = $tube->cables()->create([
                     'name'        => $cable['name'],
                     'color'       => $cable['color'],
                     'weight'      => $cable['weight'],
@@ -102,11 +107,50 @@ class TubeService
                     'description' => $cable['description'],
                 ]);
 
-                return $tube->uuid;
+                $this->updateCableLines($row->uuid, $cable['lines']);
+
+                return $row->uuid;
             }
         });
 
         // delete cables that are not in the uuid list
         $tube->cables()->whereNotIn('uuid', $cablesUUID)->delete();
+
+        return $tube;
+    }
+
+    /**
+     * @param  string $uuid
+     * @param  array  $lines
+     * @return void
+     */
+    protected function updateCableLines(string $uuid, array $lines) : void
+    {
+        $cable = Cable::where('uuid', $uuid)->first();
+
+        $cableLinesUUID = collect($lines)->map(function ($line) use ($cable) {
+            if (isset($line['uuid'])) {
+                $cable->lines()->where('uuid', $line['uuid'])->update([
+                    'name'        => $line['name'],
+                    'lat'         => $line['coordinates'][0],
+                    'lng'         => $line['coordinates'][1],
+                    'attached_on' => $line['manual'] ? null : $line['marker'],
+                ]);
+
+                return $line['uuid'];
+            } else {
+                $row = $cable->lines()->create(array_merge($line, [
+                    'name'        => $line['name'],
+                    'lat'         => $line['coordinates'][0],
+                    'lng'         => $line['coordinates'][1],
+                    'attached_on' => $line['manual'] ? null : $line['marker'],
+                ]));
+
+                return $row->uuid;
+            }
+        });
+
+        // delete lines that are not in the uuid list
+        $cable->lines()->whereNotIn('uuid', $cableLinesUUID)->delete();
     }
 }

@@ -35,8 +35,8 @@ alpine.data('tube', () => ({
         select.dispatchEvent(new Event('change'));
     },
 
-    initSelectCore(row, index) {
-        const select = document.getElementById('selectCore' + index);
+    initSelectCore(row, indexCable, indexCableLine) {
+        const select = document.getElementById('selectCore' + indexCable + '_' + indexCableLine);
 
         select.addEventListener('change', (e) => {
             row.marker = e.target.value;
@@ -154,7 +154,6 @@ alpine.data('tube', () => ({
 
                     // TUBE LINES
                     data.raw_lines.forEach((line, index) => {
-                        console.log(line);
                         this.lines.push({
                             name: line.name,
                             show: index === 0,
@@ -228,7 +227,7 @@ alpine.data('tube', () => ({
                                 customClass: 'select-none uppercase text-slate-500',
                             })
                                 .then(() => {
-                                    window.location.href = route('tubes.edit', r.data.data.uuid);
+                                    // window.location.href = route('tubes.edit', r.data.data.uuid);
                                 });
                         });
                 }

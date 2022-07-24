@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cables', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tube_id')->constrained();
+            $table->foreignId('tube_id')->constrained()->cascadeOnDelete();
             $table->string('uuid');
             $table->string('name');
             $table->string('description')->nullable();
