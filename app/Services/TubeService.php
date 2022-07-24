@@ -7,6 +7,7 @@ use App\Models\Cable;
 use App\Models\CableFromOdc;
 use App\Models\CableFromOdcLine;
 use App\Models\CableLineFromOdc;
+use App\Models\JoinClosureCable;
 use App\Models\Port;
 use App\Models\Tube;
 use Illuminate\Http\Request;
@@ -205,6 +206,10 @@ class TubeService
             ]);
         }
 
+        if ($request->has('odcCableAttachToJC')) {
+            $this->updateODCCableAttachToJC($request->get('odcCableAttachToJC'));
+        }
+
         return $tube;
     }
 
@@ -241,5 +246,38 @@ class TubeService
 
         // delete lines that are not in the uuid list
         $cable->lines()->whereNotIn('uuid', $cableLinesUUID)->delete();
+    }
+
+    protected function updateODCCableAttachToJC(array $data)
+    {
+        collect($data)->map(function ($row) {
+            $lineODC = CableFromOdcLine::where('uuid', $row['uuid'])->first();
+
+            $jcUUIDS = collect($row['jcs'])->each(function ($jc) use ($lineODC) {
+                if (! isset($jc['uuid'])) {
+                    $jcModel = JoinClosureCable::create(array_merge($jc, [
+                        'cable_from_odc_line_id' => $lineODC->id,
+                        'port_id'                => $jc['port'],
+                    ]));
+                } else {
+                    $jcModel = JoinClosureCable::where('uuid', $jc['uuid'])->first();
+
+                    $jcModel->update([
+                        'name'          => $jc['name'],
+                        'description'   => $jc['description'],
+                        'color'         => $jc['color'],
+                        'weight'        => $jc['weight'],
+                        'opacity'       => $jc['opacity'],
+                        'cable_line_id' => $lineODC->id,
+                        'port_id'       => $jc['port'],
+                    ]);
+                }
+
+                return $jcModel->uuid;
+            });
+
+            // delete jcs that are not in the uuid list
+            JoinClosureCable::whereNotIn('uuid', $jcUUIDS)->delete();
+        });
     }
 }

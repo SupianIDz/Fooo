@@ -310,9 +310,19 @@ alpine.data('tube', () => ({
 
                                         // JC
                                         if (foo.attached.ports.length > 0) {
+                                            let jcs = [];
+
+                                            foo.children.forEach((child, index) => {
+                                                jcs.push({
+                                                    ...child,
+                                                    port: child.port_id,
+                                                    lines: [],
+                                                });
+                                            });
+
                                             this.odcLinesWithJCPorts.push({
                                                 ...foo,
-                                                jcs: [],
+                                                jcs: jcs,
                                             });
                                         }
                                         //END OF JC
@@ -355,7 +365,6 @@ alpine.data('tube', () => ({
 
     // CREATE
     update() {
-
         Swal.fire({
             icon: 'question',
             title: 'APAKAH ANDA YAKIN ?',
@@ -374,6 +383,7 @@ alpine.data('tube', () => ({
                             detail: this.detail,
                             cables: this.cables,
                             cableAttachedToODC: this.cableLinesWithODCPorts,
+                            odcCableAttachToJC: this.odcLinesWithJCPorts,
                         })
                         .then(r => {
 

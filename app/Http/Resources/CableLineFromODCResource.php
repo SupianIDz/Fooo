@@ -20,6 +20,9 @@ class CableLineFromODCResource extends JsonResource
             'attached_on' => $this->attached_on,
             'attached'    => $this->attached,
             'address'     => $this->address,
+            'children'    => $this->children->map(function ($row) {
+                return $row;
+            }),
         ];
     }
 }
