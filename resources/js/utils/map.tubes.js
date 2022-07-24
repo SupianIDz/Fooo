@@ -137,30 +137,38 @@ export const drawCableTubes = async (map) => {
 
                 let cableToolTip = geoJSONCable.bindTooltip(cable.name);
 
-                geoJSONCable
-                    .on('mouseover', (e) => {
-                        geoJSONCable.setStyle({
-                            opacity: 1,
-                        });
-                    })
-                    .on('mouseout', (e) => {
-                        geoJSONCable.setStyle({
-                            opacity: cable.opacity,
-                        });
-                    })
-                    .on('click', (e) => {
-                        cableToolTip.openTooltip(e.latlng);
-                    });
-
                 // CHILD CABLE ODC
                 let childs = cable.lines.filter(line => {
                     return line.children.length > 0;
                 });
 
+                // CHILD CABLE ODC
                 let groupCableChild = [];
                 if (childs.length > 0) {
+
                     childs.forEach((child) => {
+
+                        let chdx = 1;
+                        let chdy = 1;
+                        let medianChildCable = child.children.indexOf(
+                            child.children[Math.floor((child.children.length - 1) / 2)]
+                        );
+
                         child.children.forEach((childCable) => {
+
+                            let offsetCable = 0;
+                            let weightCable = childCable.weight;
+
+                            if (indexCable < medianCable) {
+                                offsetCable = weightCable * (chdx++)
+                            } else if (indexCable > medianCable) {
+                                offsetCable = weightCable * -(chdy++)
+                            }
+
+                            if (indexCable === medianCable) {
+                                offsetCable = 0;
+                            }
+
                             let geoJSONCableChild = L.geoJSON(childCable.lines_for_map, {
                                 style: {
                                     color: childCable.color,
@@ -183,8 +191,45 @@ export const drawCableTubes = async (map) => {
                     });
                 }
 
-                groupCables.push(L.layerGroup([geoJSONCable, ...groupCableChild]));
-                groupCablesGlobal.push(geoJSONCable);
+                let group = L.layerGroup([geoJSONCable, ...groupCableChild]);
+
+                groupCables.push(group);
+                groupCablesGlobal.push(group);
+                // END OF CHILD CABLE ODC
+
+                // TEMP
+                let temps = [];
+                groupCableChild.forEach(child => {
+                    temps.push(child);
+                });
+                // END OF TEMP
+
+                geoJSONCable
+                    .on('mouseover', (e) => {
+                        geoJSONCable.setStyle({
+                            opacity: 1,
+                        });
+
+                        groupCableChild.forEach(child => {
+                            child.setStyle({
+                                opacity: 1,
+                            });
+                        });
+                    })
+                    .on('mouseout', (e) => {
+                        geoJSONCable.setStyle({
+                            opacity: cable.opacity,
+                        });
+
+                        groupCableChild.forEach((child, index) => {
+                            child.setStyle({
+                                opacity: temps[index].options.style.opacity,
+                            });
+                        });
+                    })
+                    .on('click', (e) => {
+                        cableToolTip.openTooltip(e.latlng);
+                    });
             });
         });
     }
