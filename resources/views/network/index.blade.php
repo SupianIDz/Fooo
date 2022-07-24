@@ -74,7 +74,7 @@
                                 {{ $tube->lines_count }}
                             </td>
                             <td class="py-4 px-6">
-                                <span style="color: {{ $tube->color }}">{{ $tube->color }}</span>
+                                <span style="color: {{ $tube->color }}" class="uppercase">{{ $tube->color }}</span>
                             </td>
                             <td class="py-4 px-6">
                                 {{ $tube->weight }}px

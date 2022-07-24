@@ -29,4 +29,17 @@ class TubeController extends Controller
             'markers' => $marker->get(),
         ]);
     }
+
+    /**
+     * @param  Tube   $tube
+     * @param  Marker $marker
+     * @return View
+     */
+    public function edit(Tube $tube, Marker $marker) : View
+    {
+        return view('network.create', [
+            'tube'    => $tube,
+            'markers' => $marker->get(),
+        ]);
+    }
 }

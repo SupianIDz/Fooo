@@ -4,3 +4,9 @@ export const getTubes = (queries = {}) => {
         .then(response => response.data)
         .then(response => response.data);
 };
+
+export const getTube = (uuid, queries = {}) => {
+    return axios.get(route('api.tubes.show', uuid) + '?' + new URLSearchParams(queries))
+        .then(response => response.data)
+        .then(response => response.data);
+}

@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Tubes;
 
+use App\Http\Resources\Cables\CableResource;
+use App\Models\Cable;
 use App\Models\Tube;
 use App\Models\TubeLine;
 use Grimzy\LaravelMysqlSpatial\Types\LineString;
@@ -25,18 +27,31 @@ class TubeResource extends JsonResource
             'color'       => $this->color,
             'weight'      => $this->weight,
             'opacity'     => $this->opacity,
-            'lines'       => $this->when($request->has('lines'), function () {
-                $lines = $this->lines->map(function (TubeLine $line) {
-                    return new Point($line->lng, $line->lat);
-                });
+            'cables'      => $this->cables->map(function (Cable $cable) {
+                return new CableResource($cable);
+            }),
 
-
-                if ($lines->count() === 0) {
-                    return [];
-                }
-
-                return new LineString($lines->toArray());
+            //
+            'lines'       => $this->getLines(),
+            'raw_lines'   => $this->when($request->has('raw_lines'), function () {
+                return $this->lines->load('attached:id,uuid,name,type')->toArray();
             }),
         ];
+    }
+
+    /**
+     * @return LineString|array
+     */
+    private function getLines() : LineString|array
+    {
+        $lines = $this->lines->map(function (TubeLine $line) {
+            return new Point($line->lng, $line->lat);
+        });
+
+        if ($lines->count() === 0) {
+            return [];
+        }
+
+        return new LineString($lines->toArray());
     }
 }

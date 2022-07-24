@@ -37,4 +37,12 @@ class TubeLine extends Model
     {
         return $this->belongsTo(Tube::class);
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function attached() : BelongsTo
+    {
+        return $this->belongsTo(Marker::class, 'attached_on')->with('ports:id,marker_id,name,status');
+    }
 }

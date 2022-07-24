@@ -31,10 +31,26 @@ class Tube extends Model
     ];
 
     /**
+     * @return string
+     */
+    public function getRouteKeyName() : string
+    {
+        return 'uuid';
+    }
+
+    /**
      * @return HasMany
      */
     public function lines() : HasMany
     {
         return $this->hasMany(TubeLine::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function cables() : HasMany
+    {
+        return $this->hasMany(Cable::class);
     }
 }
