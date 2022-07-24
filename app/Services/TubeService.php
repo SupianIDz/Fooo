@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Http\Requests\Tubes\CreateTubeRequest;
 use App\Models\Cable;
 use App\Models\CableFromOdc;
+use App\Models\CableFromOdcLine;
 use App\Models\CableLineFromOdc;
+use App\Models\Port;
 use App\Models\Tube;
 use Illuminate\Http\Request;
 
@@ -129,15 +131,33 @@ class TubeService
         // ODCS
         if ($request->has('cableAttachedToODC')) {
             collect($request->get('cableAttachedToODC'))->each(function ($cableLine) use ($tube) {
-                collect($cableLine['odcs'])->each(function (array $odc) use ($cableLine) {
-                    $odcModel = CableFromOdc::create([
-                        'name'          => $odc['name'],
-                        'description'   => $odc['description'],
-                        'color'         => $odc['color'],
-                        'weight'        => $odc['weight'],
-                        'opacity'       => $odc['opacity'],
-                        'cable_line_id' => $cableLine['id'],
-                        'port_id'       => $odc['port'],
+                $odcUUIDs = collect($cableLine['odcs'])->map(function (array $odc) use ($cableLine) {
+                    if (! isset($odc['uuid'])) {
+                        $odcModel = CableFromOdc::create([
+                            'name'          => $odc['name'],
+                            'description'   => $odc['description'],
+                            'color'         => $odc['color'],
+                            'weight'        => $odc['weight'],
+                            'opacity'       => $odc['opacity'],
+                            'cable_line_id' => $cableLine['id'],
+                            'port_id'       => $odc['port'],
+                        ]);
+                    } else {
+                        $odcModel = CableFromOdc::where('uuid', $odc['uuid'])->first();
+
+                        $odcModel->update([
+                            'name'          => $odc['name'],
+                            'description'   => $odc['description'],
+                            'color'         => $odc['color'],
+                            'weight'        => $odc['weight'],
+                            'opacity'       => $odc['opacity'],
+                            'cable_line_id' => $cableLine['id'],
+                            'port_id'       => $odc['port'],
+                        ]);
+                    }
+
+                    Port::whereId($odc['port'])->update([
+                        'status' => false,
                     ]);
 
                     foreach ($odc['lines'] as $line) {
@@ -148,6 +168,19 @@ class TubeService
                             'attached_on' => $line['manual'] ? null : $line['marker'],
                         ]));
                     }
+
+                    return $odcModel->uuid;
+                });
+
+                // delete cables that are not in the uuid list
+                CableFromOdc::whereNotIn('uuid', $odcUUIDs)->get()->each(function (CableFromOdc $row) {
+                    Port::whereId($row->port_id)->update([
+                        'status' => true,
+                    ]);
+
+                    $row->lines->each(function (CableFromOdcLine $line) {
+                        $line->delete();
+                    });
                 });
             });
 

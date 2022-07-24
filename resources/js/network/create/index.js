@@ -27,10 +27,13 @@ alpine.data('tube', () => ({
             getMarker(e.target.value).then(response => {
                 row.address = response.address;
                 row.coordinates = response.location.coordinates.reverse();
-            });
+            })
+                .catch(error => {
+                    console.log('INIT SELECT');
+                });
         });
 
-        if (window.uuid) {
+        if (window.uuid && row.marker !== 0) {
             select.value = row.marker;
         }
 
@@ -45,10 +48,14 @@ alpine.data('tube', () => ({
             getMarker(e.target.value).then(response => {
                 row.address = response.address;
                 row.coordinates = response.location.coordinates.reverse();
-            });
+            })
+
+                .catch(error => {
+                    console.log('INIT SELECT CORE');
+                });
         });
 
-        if (window.uuid) {
+        if (window.uuid && row.marker !== 0) {
             select.value = row.marker;
         }
 
@@ -63,7 +70,10 @@ alpine.data('tube', () => ({
             getMarker(e.target.value).then(response => {
                 row.address = response.address;
                 row.coordinates = response.location.coordinates.reverse();
-            });
+            })
+                .catch(error => {
+                    console.log('INIT SELECT ODC');
+                });
         });
 
         if (window.uuid && row.marker !== 0) {
@@ -71,6 +81,12 @@ alpine.data('tube', () => ({
         }
 
         select.dispatchEvent(new Event('change'));
+    },
+
+    initPort(row, indexODCLine, indexODC) {
+        const select = document.getElementById('selectPort' + indexODCLine + '_' + indexODC);
+
+        select.value = row.port;
     },
 
     // ADD NEW ROW
@@ -230,19 +246,23 @@ alpine.data('tube', () => ({
                                 let odcs = [];
 
                                 line.children.forEach((child, index) => {
-
                                     let childODCLines = [];
-                                    child.lines_detail.forEach((line, index) => {
+
+                                    console.log(child.lines_detail);
+                                    child.lines_detail.forEach((foo, index) => {
                                         childODCLines.push({
-                                            uuid: line.uuid,
-                                            name: line.name,
+                                            port: foo.port,
+                                            uuid: foo.uuid,
+                                            name: foo.name,
                                             show: false,
-                                            coordinates: [line.lat, line.lng],
-                                            address: line.address,
-                                            manual: line.attached_on === null,
-                                            marker: line.attached_on,
+                                            coordinates: [foo.lat, foo.lng],
+                                            address: foo.address,
+                                            manual: foo.attached_on === null,
+                                            marker: foo.attached_on,
                                         });
                                     });
+
+                                    console.log(childODCLines);
 
                                     odcs.push({
                                         ...child,

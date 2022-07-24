@@ -10,6 +10,7 @@ use App\Models\Marker;
 use App\Services\MarkerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MarkerController extends Controller
 {
@@ -35,7 +36,9 @@ class MarkerController extends Controller
      */
     public function show(Marker $marker)
     {
-        return new MarkerResource($marker);
+        return Cache::remember('marker_' . $marker->uuid, 600, function () use ($marker) {
+            return new MarkerResource($marker);
+        });
     }
 
     /**

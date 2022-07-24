@@ -36,7 +36,7 @@
 
                         <div class="w-full">
                             <label>Port Yang Dipakai</label>
-                            <select class="form" x-model="odc.port">
+                            <select class="form" :id="'selectPort' + index + '_' +indexODC" x-model="odc.port" x-init="$nextTick(() => initPort(odc, index, indexODC))">
                                 <template x-for="port in row.attached.ports" :key="port.id">
                                     <option :value="port.id" x-text="row.attached.name + ' - ' + port.name" :disabled="!port.status"></option>
                                 </template>
