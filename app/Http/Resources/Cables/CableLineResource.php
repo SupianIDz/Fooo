@@ -22,6 +22,8 @@ class CableLineResource extends JsonResource
             'uuid'        => $this->uuid,
             'name'        => $this->name,
             'address'     => $this->address,
+            'lat'         => $this->lat,
+            'lng'         => $this->lng,
             'attached_on' => $this->attached_on,
             'attached'    => $this->attached,
             'children'    => $this->child->map(function ($row) {

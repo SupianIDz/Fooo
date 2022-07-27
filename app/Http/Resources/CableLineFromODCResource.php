@@ -21,6 +21,8 @@ class CableLineFromODCResource extends JsonResource
             'attached_on' => $this->attached_on,
             'attached'    => $this->attached,
             'address'     => $this->address,
+            'lat'         => $this->lat,
+            'lng'         => $this->lng,
             'children'    => $this->children->map(function ($row) {
                 return new JoinClosureCableResource($row);
             }),

@@ -56,7 +56,7 @@
                         </select>
                     </div>
 
-                    <div x-show="jcLine.manual" x-init="initLatLng(row)" class="grid grid-cols-2 gap-3 w-3/6">
+                    <div x-show="jcLine.manual" x-init="initLatLng(jcLine)" class="grid grid-cols-2 gap-3 w-3/6">
                         <div class="w-full">
                             <label :for="'latitudeJC' + indexJCLine">Latitude</label>
                             <input class="form" :id="'latitudeJC' + indexJC + indexJCLine" x-ref="lat" x-model="jcLine.coordinates[0]" type="text">

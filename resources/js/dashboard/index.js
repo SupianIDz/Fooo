@@ -28,8 +28,8 @@ map('map').then(async map => {
             let container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
             const button1 = L.DomUtil.create('a', 'leaflet-control-button p-1', container);
             const button2 = L.DomUtil.create('a', 'leaflet-control-button p-1', container);
-            const button3 = L.DomUtil.create('a', 'leaflet-control-button p-1', container);
             const button4 = L.DomUtil.create('a', 'leaflet-control-button p-1', container);
+            const button3 = L.DomUtil.create('a', 'leaflet-control-button p-1', container);
 
             button1.innerHTML = '<img src="/assets/img/pole.svg" alt="">';
             button2.innerHTML = '<img src="/assets/img/odc.svg" alt="">';

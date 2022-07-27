@@ -15,8 +15,7 @@ export default map('map1', {
     .then(map => {
         drawMarkers(map, {
             type: 'ODC'
-        })
-            .then(() => {
-                //
-            });
+        });
+
+        return map;
     });

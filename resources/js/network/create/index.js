@@ -5,6 +5,7 @@ import alpine from 'alpinejs'
 import Swal from "sweetalert2";
 import { getMarker } from "../../utils/xhr/markers";
 import { getTube } from "../../utils/xhr/tubes";
+import refreshMap from "./inc/draw";
 
 alpine.data('tube', () => ({
     lines: [],
@@ -18,6 +19,12 @@ alpine.data('tube', () => ({
         weight: 20,
         opacity: 1,
         description: '',
+    },
+
+    refreshMap() {
+        map.then(x => {
+            refreshMap(x, this.detail, this.lines, this.cables, this.cableLinesWithODCPorts, this.odcLinesWithJCPorts);
+        });
     },
 
     initSelect(row, index) {
@@ -206,8 +213,13 @@ alpine.data('tube', () => ({
         cable.odcs.splice(index, 1);
     },
     removeODCLine(odc, index) {
-        console.log(odc, index);
         odc.lines.splice(index, 1);
+    },
+    removeOutputPortJC(odc, index) {
+        odc.jcs.splice(index, 1);
+    },
+    removeJCLine(jc, index) {
+        jc.lines.splice(index, 1);
     },
     // REMOVE ROW
 
@@ -251,6 +263,7 @@ alpine.data('tube', () => ({
     init() {
 
         if (window.uuid) {
+
             getTube(window.uuid, {
                 raw_lines: true
             })
@@ -291,72 +304,74 @@ alpine.data('tube', () => ({
                                 marker: line.attached_on,
                             });
 
-                            if (line.attached.ports.length > 0) {
+                            if (line.attached) {
 
-                                let odcs = [];
+                                if (line.attached.ports.length > 0) {
 
-                                line.children.forEach((child, index) => {
-                                    let childODCLines = [];
-                                    child.lines_detail.forEach((foo, index) => {
-                                        childODCLines.push({
-                                            port: foo.port_id,
-                                            uuid: foo.uuid,
-                                            name: foo.name,
-                                            show: false,
-                                            coordinates: [foo.lat, foo.lng],
-                                            address: foo.address,
-                                            manual: foo.attached_on === null,
-                                            marker: foo.attached_on,
+                                    let odcs = [];
+
+                                    line.children.forEach((child, index) => {
+                                        let childODCLines = [];
+                                        child.lines_detail.forEach((foo, index) => {
+                                            childODCLines.push({
+                                                port: foo.port_id,
+                                                uuid: foo.uuid,
+                                                name: foo.name,
+                                                show: false,
+                                                coordinates: [foo.lat, foo.lng],
+                                                address: foo.address,
+                                                manual: foo.attached_on === null,
+                                                marker: foo.attached_on,
+                                            });
+
+                                            // JC
+                                            if (foo.attached && foo.attached.ports.length > 0) {
+                                                let jcs = [];
+
+                                                foo.children.forEach((child, index) => {
+
+                                                    let childJCLines = [];
+
+                                                    child.lines_detail.forEach((jcLine, index) => {
+                                                        childJCLines.push({
+                                                            port: jcLine.port_id,
+                                                            uuid: jcLine.uuid,
+                                                            name: jcLine.name,
+                                                            show: false,
+                                                            coordinates: [jcLine.lat, jcLine.lng],
+                                                            address: jcLine.address,
+                                                            manual: jcLine.attached_on === null,
+                                                            marker: jcLine.attached_on,
+                                                        });
+                                                    })
+
+                                                    jcs.push({
+                                                        ...child,
+                                                        port: child.port_id,
+                                                        lines: childJCLines,
+                                                    });
+                                                });
+
+                                                this.odcLinesWithJCPorts.push({
+                                                    ...foo,
+                                                    jcs: jcs,
+                                                });
+                                            }
+                                            //END OF JC
                                         });
 
-                                        // JC
-                                        if (foo.attached.ports.length > 0) {
-                                            let jcs = [];
-
-                                            console.log(foo);
-                                            foo.children.forEach((child, index) => {
-
-                                                let childJCLines = [];
-
-                                                child.lines_detail.forEach((jcLine, index) => {
-                                                    childJCLines.push({
-                                                        port: jcLine.port_id,
-                                                        uuid: jcLine.uuid,
-                                                        name: jcLine.name,
-                                                        show: false,
-                                                        coordinates: [jcLine.lat, jcLine.lng],
-                                                        address: jcLine.address,
-                                                        manual: jcLine.attached_on === null,
-                                                        marker: jcLine.attached_on,
-                                                    });
-                                                })
-
-                                                jcs.push({
-                                                    ...child,
-                                                    port: child.port_id,
-                                                    lines: childJCLines,
-                                                });
-                                            });
-
-                                            this.odcLinesWithJCPorts.push({
-                                                ...foo,
-                                                jcs: jcs,
-                                            });
-                                        }
-                                        //END OF JC
+                                        odcs.push({
+                                            ...child,
+                                            lines: childODCLines,
+                                            show: false,
+                                        });
                                     });
 
-                                    odcs.push({
-                                        ...child,
-                                        lines: childODCLines,
-                                        show: false,
+                                    this.cableLinesWithODCPorts.push({
+                                        ...line,
+                                        odcs: odcs,
                                     });
-                                });
-
-                                this.cableLinesWithODCPorts.push({
-                                    ...line,
-                                    odcs: odcs,
-                                });
+                                }
                             }
                         });
 
@@ -372,6 +387,10 @@ alpine.data('tube', () => ({
 
                     });
                 });
+
+            setInterval(() => {
+                this.refreshMap();
+            }, 100);
         }
     },
     // END OF INIT
@@ -441,7 +460,7 @@ alpine.data('tube', () => ({
                 modal.show();
 
                 map.on('contextmenu', e => {
-                    row.coordinates = [e.latlng.lat, e.latlng.lng];
+                    row.coordinates = [e.latlng.lng, e.latlng.lat];
 
                     modal.hide();
 
