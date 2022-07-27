@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 /**
  * @mixin IdeHelperUser
  */
-class User extends Model
+class User extends \Illuminate\Foundation\Auth\User
 {
+    /**
+     * @var string[]
+     */
+    protected $fillable = [
+        'name', 'email', 'password',
+    ];
 }

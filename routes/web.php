@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MarkerController;
 use App\Http\Controllers\NetworkMapController;
 use App\Http\Controllers\TubeController;
@@ -16,7 +17,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group([], function () {
+Route::group(['prefix' => 'auth', 'as' => 'auth.', 'middleware' => 'guest'], function () {
+    Route::get('/', [AuthController::class, 'index'])->name('index');
+
+    Route::post('/', [AuthController::class, 'login'])->name('login');
+});
+
+Route::group(['middleware' => 'auth'], function () {
     # MAP
     Route::get('/', [NetworkMapController::class, 'index'])->name('map.network');
 

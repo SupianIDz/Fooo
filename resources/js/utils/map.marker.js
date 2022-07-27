@@ -1,11 +1,13 @@
 import { getMarkers } from './xhr/markers';
+import { markerToolTip } from "../dashboard/marker";
 
 export const drawMarkers = (map, params = {}) => {
+    return getMarkers(params).then((markers) => {
 
-    getMarkers(params).then((markers) => {
+        const markersZ = [];
         for (let row of markers) {
 
-            const svgIcon = L.icon({
+            let svgIcon = L.icon({
                 iconUrl: '/assets/img/' + row.icon,
                 className: '',
                 iconSize: [50, 40],
@@ -16,13 +18,9 @@ export const drawMarkers = (map, params = {}) => {
                 icon: svgIcon,
             });
 
-            marker.bindPopup(row.name);
-
-            marker.addTo(map);
+            markersZ.push(marker.bindPopup(markerToolTip(row)))
         }
-    });
 
-    return new Promise((resolve, reject) => {
-        resolve();
+        return markersZ;
     });
 }
