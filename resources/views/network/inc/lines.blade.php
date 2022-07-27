@@ -53,8 +53,8 @@
                         <input class="form" placeholder="Tube #1" type="text" x-model="row.name">
                     </div>
 
-                    <div x-show="!row.manual" class="w-3/6">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">
+                    <div x-show="!row.manual" class="w-2/6">
+                        <label for="countries">
                             Kordinat Berdasarkan Marker
                         </label>
                         <select class="form" :id="'select' + index" x-ref="select" x-init="$nextTick(() => initSelect(row, index))">
@@ -64,20 +64,20 @@
                         </select>
                     </div>
 
-                    <div x-show="row.manual" class="grid grid-cols-2 gap-3 w-3/6">
+                    <div x-show="row.manual" x-init="initLatLng(row)" class="grid grid-cols-2 gap-3 w-2/6">
                         <div class="w-full">
                             <label :for="'latitude' + index">Latitude</label>
-                            <input class="form" :id="'latitude' + index" x-model="row.coordinates[0]" type="text">
+                            <input class="form" :id="'latitude' + index" x-model="row.coordinates[0]" x-ref="lat" type="text">
                         </div>
                         <div class="w-full">
                             <label :for="'longitude' + index">Longitude</label>
-                            <input class="form" :id="'longitude' + index" x-model="row.coordinates[1]" type="text">
+                            <input class="form" :id="'longitude' + index" x-model="row.coordinates[1]" x-ref="lng" type="text">
                         </div>
                     </div>
 
                     <div class="w-1/6 mt-9 pl-3">
-                        <label :for="'default-toggle' + index" class="inline-flex relative items-center cursor-pointer">
-                            <input type="checkbox" value="" :id="'default-toggle' + index" class="sr-only peer" x-model="row.manual"
+                        <label :for="'default-toggleTube' + index" class="inline-flex relative items-center cursor-pointer">
+                            <input type="checkbox" value="" :id="'default-toggleTube' + index" class="sr-only peer" x-model="row.manual"
                                    x-init="$watch('row.manual', () => watcher(row))">
                             <div
                                 class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>

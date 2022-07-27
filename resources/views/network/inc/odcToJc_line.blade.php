@@ -45,7 +45,7 @@
                     </div>
 
                     <div x-show="!row.manual" class="w-3/6">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">
+                        <label for="countries">
                             Kordinat Berdasarkan Marker
                         </label>
                         <select class="form" :id="'selectODCMarker' + indexODC + '_' + indexODCLine"
@@ -56,14 +56,14 @@
                         </select>
                     </div>
 
-                    <div x-show="row.manual" class="grid grid-cols-2 gap-3 w-3/6">
+                    <div x-show="row.manual" x-init="initLatLng(row)" class="grid grid-cols-2 gap-3 w-3/6">
                         <div class="w-full">
                             <label :for="'latitudeODC' + indexODCLine">Latitude</label>
-                            <input class="form" :id="'latitudeODC' + indexODC + indexODCLine" x-model="row.coordinates[0]" type="text">
+                            <input class="form" :id="'latitudeODC' + indexODC + indexODCLine" x-ref="lat" x-model="row.coordinates[0]" type="text">
                         </div>
                         <div class="w-full">
                             <label :for="'longitudeODC' + indexODCLine">Longitude</label>
-                            <input class="form" :id="'longitudeODC' + indexODC + indexODCLine" x-model="row.coordinates[1]" type="text">
+                            <input class="form" :id="'longitudeODC' + indexODC + indexODCLine" x-ref="lng" x-model="row.coordinates[1]" type="text">
                         </div>
                     </div>
 
@@ -72,7 +72,7 @@
                             <input type="checkbox" value="" :id="'toggleManual' + indexODCLine" class="sr-only peer" x-model="row.manual"
                                    x-init="$watch('row.manual', () => watcher(row))">
                             <div
-                                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                             <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                                 KOORDINAT MANUAL
                             </span>

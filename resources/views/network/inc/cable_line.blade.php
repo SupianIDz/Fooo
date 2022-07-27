@@ -45,7 +45,7 @@
                     </div>
 
                     <div x-show="!row.manual" class="w-3/6">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">
+                        <label for="countries">
                             Kordinat Berdasarkan Marker
                         </label>
                         <select class="form" :id="'selectCore' + indexCable + '_' + indexCableLine" x-ref="selectCore"
@@ -56,14 +56,14 @@
                         </select>
                     </div>
 
-                    <div x-show="row.manual" class="grid grid-cols-2 gap-3 w-3/6">
+                    <div x-show="row.manual" x-init="initLatLng(row)" class="grid grid-cols-2 gap-3 w-3/6">
                         <div class="w-full">
                             <label :for="'latitude' + indexCableLine">Latitude</label>
-                            <input class="form" :id="'latitude' + indexCable + indexCableLine" x-model="row.coordinates[0]" type="text">
+                            <input class="form" :id="'latitude' + indexCable + indexCableLine" x-ref="lat" x-model="row.coordinates[0]" type="text">
                         </div>
                         <div class="w-full">
                             <label :for="'longitude' + indexCableLine">Longitude</label>
-                            <input class="form" :id="'longitude' + indexCable + indexCableLine" x-model="row.coordinates[1]" type="text">
+                            <input class="form" :id="'longitude' + indexCable + indexCableLine" x-ref="lng" x-model="row.coordinates[1]" type="text">
                         </div>
                     </div>
 

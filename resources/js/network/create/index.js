@@ -1,6 +1,6 @@
 // noinspection ES6UnusedImports
 
-import map from './inc/map.js';
+import map, { mapModal } from './inc/map.js';
 import alpine from 'alpinejs'
 import Swal from "sweetalert2";
 import { getMarker } from "../../utils/xhr/markers";
@@ -249,6 +249,7 @@ alpine.data('tube', () => ({
 
     // INIT
     init() {
+
         if (window.uuid) {
             getTube(window.uuid, {
                 raw_lines: true
@@ -420,6 +421,43 @@ alpine.data('tube', () => ({
     // TOGGLE SHOW
     toggle(row, index) {
         row.show = ! row.show;
+    },
+
+    initLatLng(row) {
+        const modalWrapper = () => {
+            mapModal().then(map => {
+                let modal = new Modal(document.getElementById('modalMap'), {
+                    onShow: () => {
+                        document.getElementById('map1').classList.add('hidden');
+                        setTimeout(function () {
+                            map.invalidateSize();
+                        }, 100);
+                    },
+                    onHide: () => {
+                        document.getElementById('map1').classList.remove('hidden');
+                    }
+                });
+
+                modal.show();
+
+                map.on('contextmenu', e => {
+                    row.coordinates = [e.latlng.lat, e.latlng.lng];
+
+                    modal.hide();
+
+                    map.off();
+                    map.remove();
+                });
+            });
+        }
+
+        this.$refs.lat.addEventListener('focus', () => {
+            modalWrapper();
+        });
+
+        this.$refs.lng.addEventListener('focus', () => {
+            modalWrapper();
+        });
     }
 }));
 

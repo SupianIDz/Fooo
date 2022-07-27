@@ -56,14 +56,14 @@
                         </select>
                     </div>
 
-                    <div x-show="jcLine.manual" class="grid grid-cols-2 gap-3 w-3/6">
+                    <div x-show="jcLine.manual" x-init="initLatLng(row)" class="grid grid-cols-2 gap-3 w-3/6">
                         <div class="w-full">
                             <label :for="'latitudeJC' + indexJCLine">Latitude</label>
-                            <input class="form" :id="'latitudeJC' + indexJC + indexJCLine" x-model="jcLine.coordinates[0]" type="text">
+                            <input class="form" :id="'latitudeJC' + indexJC + indexJCLine" x-ref="lat" x-model="jcLine.coordinates[0]" type="text">
                         </div>
                         <div class="w-full">
                             <label :for="'longitudeJC' + indexJCLine">Longitude</label>
-                            <input class="form" :id="'longitudeJC' + indexJC + indexJCLine" x-model="jcLine.coordinates[1]" type="text">
+                            <input class="form" :id="'longitudeJC' + indexJC + indexJCLine" x-ref="lng" x-model="jcLine.coordinates[1]" type="text">
                         </div>
                     </div>
 
