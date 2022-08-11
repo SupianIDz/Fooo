@@ -36,4 +36,12 @@ class CableFromOdc extends Model
     {
         return $this->hasMany(CableFromOdcLine::class)->with('attached.ports');
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function port() : BelongsTo
+    {
+        return $this->belongsTo(Port::class, 'port_id');
+    }
 }

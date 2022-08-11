@@ -26,6 +26,7 @@ class CableFromODCResource extends JsonResource
             'description'   => $this->description,
             'color'         => $this->color,
             'port'          => $this->port_id,
+            'port_name'     => $this->port->name,
             'weight'        => $this->weight,
             'opacity'       => $this->opacity,
             'lines_detail'  => $this->lines->map(function ($row) {

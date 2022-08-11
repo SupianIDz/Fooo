@@ -196,6 +196,17 @@ export default function refreshMap(map, tubeDetail, tubeLines, cables, cableLine
             });
 
             groupAll.push(polylineJC.addTo(map));
+
+            let x = L.marker(coordinatesODP[coordinatesODP.length - 1], {
+                icon: L.icon({
+                    iconUrl: '/assets/img/odp.svg',
+                    className: '',
+                    iconSize: [20, 20],
+                    iconAnchor: [12, 15],
+                }),
+            }).addTo(map);
+
+            groupAll.push(x);
         });
     });
 };

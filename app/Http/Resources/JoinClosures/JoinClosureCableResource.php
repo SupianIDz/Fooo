@@ -27,6 +27,7 @@ class JoinClosureCableResource extends JsonResource
             'lines_count'            => $this->lines_count,
             'name'                   => $this->name,
             'weight'                 => $this->weight,
+            'port_name'              => $this->port->name,
             'lines_detail'           => $this->lines,
             'lines_for_map'          => $this->getLineString(),
         ];

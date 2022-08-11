@@ -1,3 +1,5 @@
+import { ttipCableJC } from "./ttip";
+
 export const JoinClosure = (line) => {
     let jcs = [];
     line.lines_detail.forEach(lineDetail => {
@@ -19,18 +21,44 @@ export const drawJoinClosure = (map, parent, offsetParent) => {
         let geoJSONCable = L.geoJSON(joinClosure.lines_for_map, {
             style: {
                 color: joinClosure.color,
-                weight: joinClosure.weight * 3,
+                weight: joinClosure.weight,
                 opacity: joinClosure.opacity,
                 offset: offsetParent,
+                lineCap: "square",
             }
         });
 
-        geoJSONCable.bindTooltip(joinClosure.name);
-
-        // geoJSONCable.addTo(map);
+        ttipCableJC(joinClosure, parent).then(html => {
+            geoJSONCable.bindTooltip(html);
+        });
 
         group.push(geoJSONCable);
+
+        let x = L.marker(joinClosure.lines_for_map.coordinates[joinClosure.lines_for_map.coordinates.length - 1].reverse(), {
+            icon: L.icon({
+                iconUrl: '/assets/img/odp.svg',
+                className: '',
+                iconSize: [20, 20],
+                iconAnchor: [12, 15],
+            }),
+        });
+
+        group.push(x);
     });
+
+    if (group.length > 0) {
+        const x = parent.lines_for_map.coordinates[parent.lines_for_map.coordinates.length - 1];
+        let z = L.marker([x[1], x[0]], {
+            icon: L.icon({
+                iconUrl: '/assets/img/jc.svg',
+                className: '',
+                iconSize: [20, 20],
+                iconAnchor: [12, 15],
+            }),
+        });
+
+        group.push(z);
+    }
 
     return group;
 }

@@ -36,4 +36,12 @@ class JoinClosureCable extends Model
     {
         return $this->hasMany(JoinClosureCableLine::class, 'join_closure_cable_id');
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function port() : BelongsTo
+    {
+        return $this->belongsTo(Port::class, 'port_id');
+    }
 }
